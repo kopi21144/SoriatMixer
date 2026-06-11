@@ -368,3 +368,77 @@ contract SoriatMixer {
     function joinOperator(bytes32 label) external payable nonReentrant whenGridLive {
         if (msg.value < SRM_OPERATOR_STAKE) revert SOR_StakeLow();
         if (operatorDesks[msg.sender].onboarded) revert SOR_OperatorKnown();
+        operatorDesks[msg.sender] = SrmOperatorDesk({
+            onboarded: true,
+            label: label,
+            joinedAt: uint64(block.timestamp),
+            noteTally: 0
+        });
+        totalLockedWei += msg.value;
+        emit OperatorOnboard(msg.sender, label, msg.value);
+    }
+
+    function queueBatch(bytes32 batchId, uint256 potId, bytes32 blendTag)
+        external
+        payable
+        nonReentrant
+        whenGridLive
+        onlyOnboardedOperator
+    {
+        if (batchId == bytes32(0)) revert SOR_HashVoid();
+        if (batchIdUsed[batchId]) revert SOR_BatchOpen();
+        if (msg.value < SRM_NOTE_FEE) revert SOR_StakeLow();
+        if (openBatches >= SRM_OPEN_BATCH_CAP) revert SOR_QuotaFull();
+        SrmPot storage p = pots[potId];
+        if (p.phase != SrmPotPhase.Live) revert SOR_PotSealed();
+        batchIdUsed[batchId] = true;
+        batches[batchId] = SrmBatch({
+            potId: potId,
+            submitter: msg.sender,
+            blendTag: blendTag,
+            phase: SrmBatchPhase.Queued,
+            releaseHash: bytes32(0),
+            blendScore: 0,
+            queuedAt: uint64(block.timestamp)
+        });
+        unchecked {
+            openBatches += 1;
+            p.batchTally += 1;
+        }
+        totalLockedWei += msg.value;
+        emit Queued(batchId, potId, blendTag, block.timestamp);
+    }
+
+    function releaseBatch(bytes32 batchId, bytes32 payloadHash, uint16 blendScore) external onlyMixer {
+        SrmBatch storage b = batches[batchId];
+        if (b.phase != SrmBatchPhase.Queued && b.phase != SrmBatchPhase.Mixing) revert SOR_BatchDone();
+        if (blendScore < SRM_SCORE_FLOOR) revert SOR_ScoreLow();
+        if (blendScore > SRM_SCORE_CEIL) revert SOR_ScoreHigh();
+        b.phase = SrmBatchPhase.Settled;
+        b.releaseHash = payloadHash;
+        b.blendScore = blendScore;
+        if (openBatches > 0) unchecked { openBatches -= 1; }
+        emit Released(batchId, payloadHash, blendScore, activeRound);
+    }
+
+    function emitPulse(
+        bytes32 pulseId,
+        uint256 potId,
+        bytes32 pulseTag,
+        bytes32 laneHash,
+        uint16 blendBand
+    ) external onlyMixer whenGridLive {
+        if (pulseIdUsed[pulseId]) revert SOR_OperatorStale();
+        if (blendBand < SRM_BLEND_FLOOR) revert SOR_ScoreLow();
+        if (blendBand > SRM_BLEND_CEIL) revert SOR_ScoreHigh();
+        SrmPot storage p = pots[potId];
+        if (p.phase != SrmPotPhase.Live) revert SOR_PotSealed();
+        pulseIdUsed[pulseId] = true;
+        pulses[pulseId] = SrmPulse({
+            potId: potId,
+            pulseTag: pulseTag,
+            laneHash: laneHash,
+            blendBand: blendBand,
+            stampedAt: uint64(block.timestamp)
+        });
+        emit Blended(pulseId, potId, blendBand, block.timestamp);

@@ -442,3 +442,77 @@ contract SoriatMixer {
             stampedAt: uint64(block.timestamp)
         });
         emit Blended(pulseId, potId, blendBand, block.timestamp);
+    }
+
+    function fundPot() external payable whenGridLive {
+        if (msg.value == 0) revert SOR_ZeroWei();
+        emit PotFunded(msg.sender, msg.value, block.number);
+        emit Tick_0(tickSerial, msg.sender, msg.value, activeRound);
+        unchecked { tickSerial += 1; }
+    }
+
+    function withdrawNote(bytes32 noteId, address payable to) external nonReentrant whenGridLive {
+        SrmNote storage n = notes[noteId];
+        if (!n.active) revert SOR_NoteMissing();
+        if (n.depositor != msg.sender) revert SOR_ClaimSelf();
+        if (to == address(0)) revert SOR_ZeroAddr();
+        uint256 amt = n.lockedWei;
+        if (amt == 0) revert SOR_ZeroWei();
+        n.active = false;
+        n.lockedWei = 0;
+        totalLockedWei -= amt;
+        _sendNative(to, amt);
+    }
+
+    function _sendNative(address to, uint256 amt) internal {
+        (bool ok, ) = payable(to).call{value: amt}("");
+        if (!ok) revert SOR_NativeFail();
+    }
+
+    function _openRound(uint256 roundId) internal {
+        SrmBlendRing storage ring = blendRings[roundId];
+        ring.openedAt = uint64(block.timestamp);
+        ring.noteWeight = _roundNoteWeight();
+        ring.batchWeight = openBatches;
+        (ring.foldHA, ring.foldHB) = _foldDigest(roundId, ring.noteWeight, ring.batchWeight);
+    }
+
+    function _foldDigest(uint256 roundId, uint256 nw, uint256 bw)
+        internal
+        view
+        returns (bytes32 hA, bytes32 hB)
+    {
+        hA = keccak256(abi.encode(SRM_DOMAIN, roundId, nw, ADDRESS_A, _PEPPER_0));
+        hB = keccak256(abi.encode(bw, roundId, ADDRESS_B, _PEPPER_1, SRM_ROUND_BLOCKS));
+    }
+
+    function noteDigest(bytes32 noteId) public view returns (bytes32) {
+        SrmNote storage n = notes[noteId];
+        (bytes32 hA, bytes32 hB) = _foldDigest(n.potId, uint256(uint160(n.depositor)), n.lockedWei);
+        return keccak256(abi.encodePacked(hA, hB, n.commitment, ADDRESS_C, _PEPPER_2));
+    }
+
+    function _roundNoteWeight() internal view returns (uint256 w) {
+        for (uint256 i = 1; i <= 22; ++i) {
+            w += pots[i].weightSum;
+        }
+    }
+
+    function _seedPots() internal {
+        pots[1] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(3),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 54,
+            potKey: 0x115008296a3645717616dc2b63f725a0a9372c8b2c6ac4632b1c2f9b5ab64041
+        });
+        emit Pooled(1, 0x115008296a3645717616dc2b63f725a0a9372c8b2c6ac4632b1c2f9b5ab64041, uint8(3), 54);
+        pots[2] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(5),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 91,

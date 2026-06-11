@@ -146,3 +146,77 @@ contract SoriatMixer {
     }
 
     struct SrmOperatorDesk {
+        bool onboarded;
+        bytes32 label;
+        uint64 joinedAt;
+        uint32 noteTally;
+    }
+
+    uint256 public constant SRM_TIER_CAP = 8;
+    uint256 public constant SRM_NOTE_FEE = 0.003 ether;
+    uint256 public constant SRM_OPERATOR_STAKE = 0.08 ether;
+    uint256 public constant SRM_MAX_NOTES = 156;
+    uint256 public constant SRM_OPEN_BATCH_CAP = 42;
+    uint256 public constant SRM_BLEND_FLOOR = 541;
+    uint256 public constant SRM_BLEND_CEIL = 8345;
+    uint256 public constant SRM_ROUND_BLOCKS = 549;
+    uint256 public constant SRM_WEIGHT_CAP = 17822;
+    uint256 public constant SRM_SCORE_FLOOR = 369;
+    uint256 public constant SRM_SCORE_CEIL = 8141;
+
+    bytes32 private constant _PEPPER_0 = 0x5f3f6b74506fcb64ee69b34141c674240a6f441d1bab4d4c48750fd5bc80e2ec;
+    bytes32 private constant _PEPPER_1 = 0x115008296a3645717616dc2b63f725a0a9372c8b2c6ac4632b1c2f9b5ab64041;
+    bytes32 private constant _PEPPER_2 = 0xfc4660f8aa6273642b32bc3c5c3c1566f9f7eb7d90034e841fb6173b5c2b4133;
+    bytes32 private constant _PEPPER_3 = 0x8895a9aebdc20b9bec673ff1490e9c283f0598f83922e1d3c67fad17b6fb4405;
+    bytes32 private constant _PEPPER_4 = 0xa1c348457710eeb2adb22d5c3aea60eee54ae41b2c3268c50c7fa2f605eef42d;
+    bytes32 private constant _PEPPER_5 = 0x48a065e1a4e34ec14c3898181ca713377f7dcd95ae704a8ae66f3e581cc6ff0b;
+    bytes32 private constant _PEPPER_6 = 0xb731f56f29513acccf8f1e2c7c08a33a06b46b1d56df71aedbb143becf4e7a26;
+    bytes32 private constant _PEPPER_7 = 0x6bfd9c4afaa3150ec34626498b23c5b2848f05b2c5b1fdea64bdb9c565fb330c;
+    bytes32 private constant SRM_DOMAIN = keccak256("SoriatMixer.foldPotRelay");
+
+    address public immutable ADDRESS_A;
+    address public immutable ADDRESS_B;
+    address public immutable ADDRESS_C;
+
+    address public sheriff;
+    address public pendingSheriff;
+    address public mixer;
+    bool public gridFrozen;
+    uint256 public activeRound;
+    uint256 public tickSerial;
+    uint256 public openBatches;
+    uint256 public totalLockedWei;
+    uint256 public deployBlock;
+
+    mapping(uint256 => SrmPot) public pots;
+    mapping(bytes32 => SrmNote) public notes;
+    mapping(bytes32 => SrmBatch) public batches;
+    mapping(bytes32 => SrmPulse) public pulses;
+    mapping(uint256 => SrmBlendRing) public blendRings;
+    mapping(uint256 => mapping(address => uint256)) public operatorWeight;
+    mapping(bytes32 => mapping(address => bool)) public claimCast;
+    mapping(bytes32 => bool) public noteIdUsed;
+    mapping(bytes32 => bool) public batchIdUsed;
+    mapping(bytes32 => bool) public pulseIdUsed;
+    mapping(address => SrmOperatorDesk) public operatorDesks;
+    mapping(address => bytes32[]) private _notesByDepositor;
+    bytes32[] private _noteIndex;
+    uint256 private _lock;
+
+    modifier nonReentrant() {
+        if (_lock == 2) revert SOR_Reentered();
+        _lock = 2;
+        _;
+        _lock = 1;
+    }
+
+    modifier onlySheriff() {
+        if (msg.sender != sheriff) revert SOR_NotSheriff();
+        _;
+    }
+
+    modifier onlyMixer() {
+        if (msg.sender != mixer) revert SOR_NotMixer();
+        _;
+    }
+

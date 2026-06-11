@@ -294,3 +294,77 @@ contract SoriatMixer {
     }
 
     function offboardOperator(address operator) external onlySheriff {
+        if (!operatorDesks[operator].onboarded) revert SOR_NotOperator();
+        operatorDesks[operator].onboarded = false;
+        emit OperatorOff(operator, block.number);
+    }
+
+    function sweepSurplus(uint256 amt, address payable to) external onlySheriff nonReentrant {
+        if (to == address(0)) revert SOR_ZeroAddr();
+        if (amt == 0 || amt > address(this).balance) revert SOR_ZeroWei();
+        if (amt > address(this).balance - totalLockedWei) revert SOR_QuotaFull();
+        _sendNative(to, amt);
+    }
+
+    function depositNote(
+        bytes32 noteId,
+        uint256 potId,
+        bytes32 commitment,
+        uint8 blendTier
+    ) external payable nonReentrant whenGridLive onlyOnboardedOperator {
+        if (noteId == bytes32(0)) revert SOR_HashVoid();
+        if (noteIdUsed[noteId]) revert SOR_NoteExists();
+        if (msg.value < SRM_NOTE_FEE) revert SOR_StakeLow();
+        if (blendTier == 0 || blendTier > SRM_TIER_CAP) revert SOR_TierBad();
+        SrmPot storage p = pots[potId];
+        if (p.phase != SrmPotPhase.Live) revert SOR_PotSealed();
+        if (p.noteTally >= SRM_MAX_NOTES) revert SOR_QuotaFull();
+        noteIdUsed[noteId] = true;
+        notes[noteId] = SrmNote({
+            potId: potId,
+            depositor: msg.sender,
+            commitment: commitment,
+            blendTier: blendTier,
+            yesClaims: 0,
+            noClaims: 0,
+            lockedWei: msg.value,
+            depositedAt: uint64(block.timestamp),
+            active: true
+        });
+        unchecked {
+            p.noteTally += 1;
+            p.weightSum = SrmWeigh.cappedSum(
+                p.weightSum, uint256(blendTier) * 97, SRM_WEIGHT_CAP
+            );
+            operatorDesks[msg.sender].noteTally += 1;
+        }
+        operatorWeight[activeRound][msg.sender] += uint256(blendTier) * 13;
+        totalLockedWei += msg.value;
+        _notesByDepositor[msg.sender].push(noteId);
+        _noteIndex.push(noteId);
+        emit Deposited(noteId, potId, msg.sender, blendTier, msg.value);
+    }
+
+    function claimNote(bytes32 noteId, bool affirm) external whenGridLive {
+        SrmNote storage n = notes[noteId];
+        if (!n.active) revert SOR_NoteMissing();
+        if (n.depositor == msg.sender) revert SOR_ClaimSelf();
+        if (claimCast[noteId][msg.sender]) revert SOR_ClaimUsed();
+        claimCast[noteId][msg.sender] = true;
+        if (affirm) unchecked { n.yesClaims += 1; }
+        else unchecked { n.noClaims += 1; }
+        emit Claimed(noteId, msg.sender, affirm, activeRound);
+    }
+
+    function stakeNote(bytes32 noteId) external payable nonReentrant whenGridLive {
+        if (msg.value == 0) revert SOR_ZeroWei();
+        SrmNote storage n = notes[noteId];
+        if (!n.active) revert SOR_NoteMissing();
+        n.lockedWei += msg.value;
+        totalLockedWei += msg.value;
+        emit Staked(noteId, msg.sender, msg.value, activeRound);
+    }
+
+    function joinOperator(bytes32 label) external payable nonReentrant whenGridLive {
+        if (msg.value < SRM_OPERATOR_STAKE) revert SOR_StakeLow();
+        if (operatorDesks[msg.sender].onboarded) revert SOR_OperatorKnown();

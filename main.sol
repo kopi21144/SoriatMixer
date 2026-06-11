@@ -664,3 +664,77 @@ contract SoriatMixer {
             blendTier: uint8(3),
             openedAt: uint64(block.timestamp),
             noteTally: 0,
+            batchTally: 0,
+            weightSum: 646,
+            potKey: 0x115008296a3645717616dc2b63f725a0a9372c8b2c6ac4632b1c2f9b5ab64041
+        });
+        emit Pooled(17, 0x115008296a3645717616dc2b63f725a0a9372c8b2c6ac4632b1c2f9b5ab64041, uint8(3), 646);
+        pots[18] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(5),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 683,
+            potKey: 0xfc4660f8aa6273642b32bc3c5c3c1566f9f7eb7d90034e841fb6173b5c2b4133
+        });
+        emit Pooled(18, 0xfc4660f8aa6273642b32bc3c5c3c1566f9f7eb7d90034e841fb6173b5c2b4133, uint8(5), 683);
+        pots[19] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(4),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 720,
+            potKey: 0x8895a9aebdc20b9bec673ff1490e9c283f0598f83922e1d3c67fad17b6fb4405
+        });
+        emit Pooled(19, 0x8895a9aebdc20b9bec673ff1490e9c283f0598f83922e1d3c67fad17b6fb4405, uint8(4), 720);
+        pots[20] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(6),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 757,
+            potKey: 0xa1c348457710eeb2adb22d5c3aea60eee54ae41b2c3268c50c7fa2f605eef42d
+        });
+        emit Pooled(20, 0xa1c348457710eeb2adb22d5c3aea60eee54ae41b2c3268c50c7fa2f605eef42d, uint8(6), 757);
+        pots[21] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(7),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 794,
+            potKey: 0x48a065e1a4e34ec14c3898181ca713377f7dcd95ae704a8ae66f3e581cc6ff0b
+        });
+        emit Pooled(21, 0x48a065e1a4e34ec14c3898181ca713377f7dcd95ae704a8ae66f3e581cc6ff0b, uint8(7), 794);
+        pots[22] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(5),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 831,
+            potKey: 0xb731f56f29513acccf8f1e2c7c08a33a06b46b1d56df71aedbb143becf4e7a26
+        });
+        emit Pooled(22, 0xb731f56f29513acccf8f1e2c7c08a33a06b46b1d56df71aedbb143becf4e7a26, uint8(5), 831);
+    }
+
+    // blend readers
+    function peekNote_0(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_0));
+    }
+
+    function peekNote_1(bytes32 noteId) external view returns (

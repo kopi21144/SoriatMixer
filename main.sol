@@ -72,3 +72,77 @@ contract SoriatMixer {
     event Claimed(bytes32 indexed noteId, address indexed claimant, bool affirm, uint256 roundId);
     event Staked(bytes32 indexed noteId, address indexed from, uint256 weiAmt, uint256 roundId);
     event Queued(bytes32 indexed batchId, uint256 indexed potId, bytes32 blendTag, uint256 queuedAt);
+    event Released(bytes32 indexed batchId, bytes32 payloadHash, uint16 blendScore, uint256 roundId);
+    event Blended(bytes32 indexed pulseId, uint256 indexed potId, uint16 blendBand, uint256 stampedAt);
+    event Pooled(uint256 indexed potId, bytes32 potKey, uint8 tier, uint256 weightSeed);
+    event Rotated(uint256 indexed roundId, uint64 wallClock, uint256 noteWeight, uint256 batchWeight);
+    event Frozen(bool gridFrozen, address indexed by, uint256 atBlock);
+    event SheriffQueued(address indexed pending, uint256 atBlock);
+    event SheriffAccepted(address indexed prev, address indexed next, uint256 atBlock);
+    event OperatorOnboard(address indexed operator, bytes32 label, uint256 stakeWei);
+    event OperatorOff(address indexed operator, uint256 atBlock);
+    event PotFunded(address indexed from, uint256 weiAmt, uint256 atBlock);
+    event Tick_0(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_1(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_2(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_3(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_4(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_5(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_6(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_7(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_8(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_9(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+    event Tick_10(uint256 indexed slot, address indexed actor, uint256 meta, uint256 roundId);
+
+    enum SrmPotPhase { Idle, Live, Closed }
+    enum SrmBatchPhase { Queued, Mixing, Settled, Voided }
+
+    struct SrmPot {
+        SrmPotPhase phase;
+        uint8 blendTier;
+        uint64 openedAt;
+        uint32 noteTally;
+        uint32 batchTally;
+        uint256 weightSum;
+        bytes32 potKey;
+    }
+
+    struct SrmNote {
+        uint256 potId;
+        address depositor;
+        bytes32 commitment;
+        uint8 blendTier;
+        uint32 yesClaims;
+        uint32 noClaims;
+        uint256 lockedWei;
+        uint64 depositedAt;
+        bool active;
+    }
+
+    struct SrmBatch {
+        uint256 potId;
+        address submitter;
+        bytes32 blendTag;
+        SrmBatchPhase phase;
+        bytes32 releaseHash;
+        uint16 blendScore;
+        uint64 queuedAt;
+    }
+
+    struct SrmPulse {
+        uint256 potId;
+        bytes32 pulseTag;
+        bytes32 laneHash;
+        uint16 blendBand;
+        uint64 stampedAt;
+    }
+
+    struct SrmBlendRing {
+        uint64 openedAt;
+        uint256 noteWeight;
+        uint256 batchWeight;
+        bytes32 foldHA;
+        bytes32 foldHB;
+    }
+
+    struct SrmOperatorDesk {

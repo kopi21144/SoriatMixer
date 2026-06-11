@@ -220,3 +220,77 @@ contract SoriatMixer {
         _;
     }
 
+    modifier whenGridLive() {
+        if (gridFrozen) revert SOR_GridFrozen();
+        _;
+    }
+
+    modifier onlyOnboardedOperator() {
+        if (!operatorDesks[msg.sender].onboarded) revert SOR_NotOperator();
+        _;
+    }
+
+    constructor() {
+        ADDRESS_A = 0x92cFddDCa1e0AA4fD2d63BC2E9F3E3b77f95449d;
+        ADDRESS_B = 0x82230Cb7a047e775A298c2Fe921Aa0dC2d0A2d38;
+        ADDRESS_C = 0xF61B81b03Db00A264Ffc7ecDC1dD4F927E5C5fa0;
+        sheriff = msg.sender;
+        mixer = ADDRESS_A;
+        _lock = 1;
+        deployBlock = block.number;
+        activeRound = 1;
+        _openRound(1);
+        _seedPots();
+    }
+
+    function queueSheriff(address next_) external onlySheriff {
+        if (next_ == address(0) || next_ == sheriff) revert SOR_ZeroAddr();
+        pendingSheriff = next_;
+        emit SheriffQueued(next_, block.number);
+    }
+
+    function acceptSheriff() external {
+        if (msg.sender != pendingSheriff) revert SOR_PendingMismatch();
+        address prev = sheriff;
+        sheriff = pendingSheriff;
+        pendingSheriff = address(0);
+        emit SheriffAccepted(prev, sheriff, block.number);
+    }
+
+    function assignMixer(address next_) external onlySheriff {
+        if (next_ == address(0)) revert SOR_ZeroAddr();
+        mixer = next_;
+    }
+
+    function setGridFrozen(bool on) external onlySheriff {
+        gridFrozen = on;
+        emit Frozen(on, msg.sender, block.number);
+    }
+
+    function advanceRound() external onlySheriff whenGridLive {
+        uint256 n = activeRound + 1;
+        if (n > 29) revert SOR_RoundBad();
+        activeRound = n;
+        _openRound(n);
+        emit Rotated(n, uint64(block.timestamp), _roundNoteWeight(), openBatches);
+    }
+
+    function sealPot(uint256 potId) external onlyMixer {
+        SrmPot storage p = pots[potId];
+        if (p.phase == SrmPotPhase.Idle) revert SOR_PotVoid();
+        p.phase = SrmPotPhase.Closed;
+    }
+
+    function onboardOperator(address operator, bytes32 label) external onlySheriff {
+        if (operator == address(0)) revert SOR_ZeroAddr();
+        if (operatorDesks[operator].onboarded) revert SOR_OperatorKnown();
+        operatorDesks[operator] = SrmOperatorDesk({
+            onboarded: true,
+            label: label,
+            joinedAt: uint64(block.timestamp),
+            noteTally: 0
+        });
+        emit OperatorOnboard(operator, label, 0);
+    }
+
+    function offboardOperator(address operator) external onlySheriff {

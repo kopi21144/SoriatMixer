@@ -738,3 +738,77 @@ contract SoriatMixer {
     }
 
     function peekNote_1(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_1));
+    }
+
+    function peekNote_2(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_2));
+    }
+
+    function peekNote_3(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_3));
+    }
+
+    function peekNote_4(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_4));
+    }
+
+    function peekNote_5(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_5));
+    }
+

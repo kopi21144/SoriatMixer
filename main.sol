@@ -590,3 +590,77 @@ contract SoriatMixer {
         });
         emit Pooled(9, 0x115008296a3645717616dc2b63f725a0a9372c8b2c6ac4632b1c2f9b5ab64041, uint8(3), 350);
         pots[10] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(5),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 387,
+            potKey: 0xfc4660f8aa6273642b32bc3c5c3c1566f9f7eb7d90034e841fb6173b5c2b4133
+        });
+        emit Pooled(10, 0xfc4660f8aa6273642b32bc3c5c3c1566f9f7eb7d90034e841fb6173b5c2b4133, uint8(5), 387);
+        pots[11] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(4),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 424,
+            potKey: 0x8895a9aebdc20b9bec673ff1490e9c283f0598f83922e1d3c67fad17b6fb4405
+        });
+        emit Pooled(11, 0x8895a9aebdc20b9bec673ff1490e9c283f0598f83922e1d3c67fad17b6fb4405, uint8(4), 424);
+        pots[12] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(6),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 461,
+            potKey: 0xa1c348457710eeb2adb22d5c3aea60eee54ae41b2c3268c50c7fa2f605eef42d
+        });
+        emit Pooled(12, 0xa1c348457710eeb2adb22d5c3aea60eee54ae41b2c3268c50c7fa2f605eef42d, uint8(6), 461);
+        pots[13] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(7),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 498,
+            potKey: 0x48a065e1a4e34ec14c3898181ca713377f7dcd95ae704a8ae66f3e581cc6ff0b
+        });
+        emit Pooled(13, 0x48a065e1a4e34ec14c3898181ca713377f7dcd95ae704a8ae66f3e581cc6ff0b, uint8(7), 498);
+        pots[14] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(5),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 535,
+            potKey: 0xb731f56f29513acccf8f1e2c7c08a33a06b46b1d56df71aedbb143becf4e7a26
+        });
+        emit Pooled(14, 0xb731f56f29513acccf8f1e2c7c08a33a06b46b1d56df71aedbb143becf4e7a26, uint8(5), 535);
+        pots[15] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(4),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 572,
+            potKey: 0x6bfd9c4afaa3150ec34626498b23c5b2848f05b2c5b1fdea64bdb9c565fb330c
+        });
+        emit Pooled(15, 0x6bfd9c4afaa3150ec34626498b23c5b2848f05b2c5b1fdea64bdb9c565fb330c, uint8(4), 572);
+        pots[16] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(8),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,
+            batchTally: 0,
+            weightSum: 609,
+            potKey: 0x5f3f6b74506fcb64ee69b34141c674240a6f441d1bab4d4c48750fd5bc80e2ec
+        });
+        emit Pooled(16, 0x5f3f6b74506fcb64ee69b34141c674240a6f441d1bab4d4c48750fd5bc80e2ec, uint8(8), 609);
+        pots[17] = SrmPot({
+            phase: SrmPotPhase.Live,
+            blendTier: uint8(3),
+            openedAt: uint64(block.timestamp),
+            noteTally: 0,

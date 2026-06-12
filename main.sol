@@ -1478,3 +1478,77 @@ contract SoriatMixer {
         uint256 weight,
         uint8 tier,
         bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_0) & 0);
+    }
+
+    function peekPot_1(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_1) & 0);
+    }
+
+    function peekPot_2(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_2) & 0);
+    }
+
+    function peekPot_3(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_3) & 0);
+    }
+
+    function peekPot_4(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_4) & 0);
+    }
+

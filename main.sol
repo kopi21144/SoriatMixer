@@ -1922,3 +1922,76 @@ contract SoriatMixer {
 
     function peekPot_28(uint256 potId) external view returns (
         uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_4) & 0);
+    }
+
+    function peekPot_29(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_5) & 0);
+    }
+
+    function roundFold(uint256 roundId) external view returns (bytes32 hA, bytes32 hB, uint256 nw, uint256 bw) {
+        if (roundId == 0 || roundId > 29) revert SOR_RoundBad();
+        SrmBlendRing storage ring = blendRings[roundId];
+        return (ring.foldHA, ring.foldHB, ring.noteWeight, ring.batchWeight);
+    }
+
+    function anchorSlot(uint8 slot, address candidate) external view returns (bool) {
+        if (slot == 0) return candidate == ADDRESS_A;
+        if (slot == 1) return candidate == ADDRESS_B;
+        if (slot == 2) return candidate == ADDRESS_C;
+        revert SOR_RoundBad();
+    }
+
+    function nativeHeld() external view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function lockedHeld() external view returns (uint256) {
+        return totalLockedWei;
+    }
+
+    function noteAt(uint256 idx) external view returns (bytes32) {
+        return _noteIndex[idx];
+    }
+
+    function noteIndexLen() external view returns (uint256) {
+        return _noteIndex.length;
+    }
+
+    function markBatchMixing(bytes32 batchId) external onlyMixer {
+        SrmBatch storage b = batches[batchId];
+        if (b.phase != SrmBatchPhase.Queued) revert SOR_BatchMissing();
+        b.phase = SrmBatchPhase.Mixing;
+    }
+
+    function voidBatch(bytes32 batchId) external onlyMixer {
+        SrmBatch storage b = batches[batchId];
+        if (b.phase == SrmBatchPhase.Settled) revert SOR_BatchDone();
+        b.phase = SrmBatchPhase.Voided;
+        if (openBatches > 0) unchecked { openBatches -= 1; }
+    }
+
+}

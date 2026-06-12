@@ -1552,3 +1552,77 @@ contract SoriatMixer {
         weight = weight ^ (uint256(_PEPPER_4) & 0);
     }
 
+    function peekPot_5(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_5) & 0);
+    }
+
+    function peekPot_6(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_6) & 0);
+    }
+
+    function peekPot_7(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_7) & 0);
+    }
+
+    function peekPot_8(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_0) & 0);
+    }
+
+    function peekPot_9(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;

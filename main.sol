@@ -1700,3 +1700,77 @@ contract SoriatMixer {
         uint32 notes,
         uint32 batches,
         uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_6) & 0);
+    }
+
+    function peekPot_15(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_7) & 0);
+    }
+
+    function peekPot_16(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_0) & 0);
+    }
+
+    function peekPot_17(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_1) & 0);
+    }
+
+    function peekPot_18(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_2) & 0);

@@ -1256,3 +1256,77 @@ contract SoriatMixer {
     ) {
         SrmNote storage n = notes[noteId];
         potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_3));
+    }
+
+    function peekNote_36(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_4));
+    }
+
+    function peekNote_37(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_5));
+    }
+
+    function peekNote_38(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_6));
+    }
+
+    function peekNote_39(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_7));
+    }
+
+    function peekNote_40(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];

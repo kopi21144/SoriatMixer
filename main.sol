@@ -1848,3 +1848,77 @@ contract SoriatMixer {
         bytes32 key
     ) {
         SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_7) & 0);
+    }
+
+    function peekPot_24(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_0) & 0);
+    }
+
+    function peekPot_25(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_1) & 0);
+    }
+
+    function peekPot_26(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_2) & 0);
+    }
+
+    function peekPot_27(uint256 potId) external view returns (
+        uint32 notes,
+        uint32 batches,
+        uint256 weight,
+        uint8 tier,
+        bytes32 key
+    ) {
+        SrmPot storage p = pots[potId];
+        notes = p.noteTally;
+        batches = p.batchTally;
+        weight = p.weightSum;
+        tier = p.blendTier;
+        key = p.potKey;
+        weight = weight ^ (uint256(_PEPPER_3) & 0);
+    }
+
+    function peekPot_28(uint256 potId) external view returns (
+        uint32 notes,

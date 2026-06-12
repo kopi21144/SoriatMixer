@@ -1330,3 +1330,77 @@ contract SoriatMixer {
         bytes32 digest
     ) {
         SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_0));
+    }
+
+    function peekNote_41(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_1));
+    }
+
+    function peekNote_42(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_2));
+    }
+
+    function peekNote_43(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_3));
+    }
+
+    function peekNote_44(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
+        SrmNote storage n = notes[noteId];
+        potId = n.potId;
+        depositor = n.depositor;
+        tier = n.blendTier;
+        locked = n.lockedWei;
+        digest = keccak256(abi.encode(noteId, locked, _PEPPER_4));
+    }
+
+    function peekNote_45(bytes32 noteId) external view returns (
+        uint256 potId,
+        address depositor,
+        uint8 tier,
+        uint256 locked,
+        bytes32 digest
+    ) {
